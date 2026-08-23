@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קריאה מקוונת | הספר שלך</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .reader-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .book-page {
+            min-height: 400px;
+            max-height: 550px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            background-color: #fff;
+            text-align: right;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .book-page.cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: none;
+        }
+
+        .cover-page img {
+            max-width: 280px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+
+        button:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #e9ecef;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>קריאה מקוונת בספר</h1>
+    </header>
+
+    <main>
+        <div class="reader-container">
+            <!-- אזור תצוגת העמוד -->
+            <div id="page-display" class="book-page cover-page">
+                <img id="cover-image" src="[הכנס כאן קישור או שם של קובץ הכריכה החדשה]" alt="כריכת הספר">
+                <h2>שם הספר שלך</h2>
+                <p>לחץ על "הבא" כדי להתחיל לקרוא</p>
+            </div>
+
+            <!-- כפתורי שליטה וניווט -->
+            <div class="controls">
+                <button id="prev-btn" onclick="changePage(-1)" disabled>העמוד הקדום</button>
+                <span id="page-indicator" class="page-indicator">כריכה</span>
+                <button id="next-btn" onclick="changePage(1)">העמוד הבא</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>כל הזכויות שמורות &copy; 2026</p>
+    </footer>
+
+    <script>
+        // מערך המכיל את תוכן העמודים בספר
+        const pages = [
+            {
+                type: 'cover',
+                html: `
+                    <img src="cover.jpg" alt="כריכת הספר">
+                    <h2>שם הספר שלך</h2>
+                    <p style="color: #555;">הכריכה החדשה</p>
+                `,
+                title: 'כריכה'
+            },
+            {
+                type: 'content',
+                html: `
+                    <h3>עמוד 1: מבוא</h3>
+                    <p>כאן יופיע הטקסט המלא של העמוד הראשון בספר שלך. תוכל לעצב אותו, להוסיף פסקאות, כותרות וכל תוכן שתרצה שיוצג בצורה נקייה ונוחה לקריאה רציפה במסכים שונים.</p>
+                    <p>המערכת מאפשרת למשתמשים לדפדף בקלות קדימה ואחורה ממש כמו בספר אמיתי.</p>
+                `,
+                title: 'עמוד 1'
+            },
+            {
+                type: 'content',
+                html: `
+                    <h3>עמוד 2: פרק ראשון</h3>
+                    <p>זהו עמוד התוכן השני לדוגמה. הממשק תומך בגללה אנכית בתוך העמוד במידה והטקסט ארוך, כך ששום תוכן לא נחתך.</p>
+                    <p>מוזמן להחליף את הטקסטים הללו בתוכן האמיתי של הספר שלך בכל שלב שתבחרי.</p>
+                `,
+                title: 'עמוד 2'
+            }
+            // ניתן להוסיף עמודים נוספים בקלות על ידי הוספת אובייקט נוסף למערך
+        ];
+
+        let currentPageIndex = 0;
+
+        function updateReader() {
+            const display = document.getElementById('page-display');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const indicator = document.getElementById('page-indicator');
+
+            // עדכון תוכן העמוד
+            display.innerHTML = pages[currentPageIndex].html;
+            
+            // עדכון סגנון העמוד (כריכה לעומת תוכן רגיל)
+            if (pages[currentPageIndex].type === 'cover') {
+                display.classList.add('cover-page');
+            } else {
+                display.classList.remove('cover-page');
+            }
+
+            // עדכון מחוון העמודים
+            indicator.textContent = pages[currentPageIndex].title;
+
+            // מצב כפתורי הניווט
+            prevBtn.disabled = currentPageIndex === 0;
+            nextBtn.disabled = currentPageIndex === pages.length - 1;
+        }
+
+        function changePage(direction) {
+            const newIndex = currentPageIndex + direction;
+            if (newIndex >= 0 && newIndex < pages.length) {
+                currentPageIndex = newIndex;
+                updateReader();
+                // גלילה חזרה לראש העמוד בעת מעבר עמוד
+                document.getElementById('page-display').scrollTop = 0;
+            }
+        }
+
+        // טעינת עמוד ראשונית
+        updateReader();
+    </script>
+</body>
+</html>
